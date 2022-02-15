@@ -1,84 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,useEffect} from 'react'
+import { useParams } from 'react-router-dom'
+const Product = () => {
+    const { id } = useParams
+    const [product,setProduct] = useState("")
+    const [loading, setLoading] = useState(false)
+    
+    useEffect(() => { 
+        const getProduct = async () => { 
+            setLoading(true)
+            const res = await fetch(`https://fakestoreapi.com/products/${id}`)
+            setProduct(await res.json())
+            setLoading(false)
+        }
+        getProduct()
+    },[])
 
-function Product() {
-  const [data, setData] = useState([]);
-  const [filter, setFilter] = useState(data);
-  const [loading, setLoading] = useState(false);
-  let componentMounted = true;
-
-  useEffect(() => {
-    const getData = async () => {
-      setLoading(true);
-      const res = await fetch(`https://fakestoreapi.com/products`);
-      if (componentMounted) {
-        setData(await res.clone().json());
-        setFilter(await res.json());
-        setLoading(false);
-        console.log(filter);
-      }
-
-      return () => {
-        componentMounted = false;
-      };
-    };
-    getData();
-  }, []);
-
-  const Loading = () => {
-    return <>Loading....</>;
-  };
-
-  const ShowProducts = () => {
-    return (
-      <>
-        <div className="buttons d-flex justify-content-center mb-5 pb-5">
-          <button className="btn btn-outline-dark me-2">All</button>
-          <button className="btn btn-outline-dark me-2">Men's Clothing</button>
-          <button className="btn btn-outline-dark me-2">
-            Women's Clothing
-          </button>
-          <button className="btn btn-outline-dark me-2">Jwelery</button>
-          <button className="btn btn-outline-dark me-2">Electronincs</button>
+    const Loading = () => { 
+        return (<>
+            Loding....
+        </>)
+    }
+    const ShowProduct = () => { 
+        return (<>
+            <div className='col-md-6'>
+                <img src={product.image} alt={product.title} width="400px" height="400px" />
+                <h4 className='text-uppercase text-black-50'>{product.category}</h4>
+                <h1 className='display-5'>{product.title}</h1>
+                <p className='lead fw-bold' >
+                    Rating {product.rating && product.rating.rate}
+                    <i className='fa fa-start'></i>
+                </p>
+                <h3 className='display-6 fw-bold my-4'>${product.price}</h3>
+                <p className="lead">{ product.description}</p>
+                <button className='btn btn-dark'>Go to Cart</button>
         </div>
-        {filter.map((product) => {
-          return (
-            <>
-              <div className="col-md-3">
-                <div class="card">
-                <img src={product.image} class="card-img-top" alt={ product.title} />
-                  <div class="card-body">
-                    <h5 class="card-title">{product.title}</h5>
-                    <p class="card-text">
-                         ${ product.price}
-                    </p>
-                    <a href="#" class="btn btn-primary">
-                      Go somewhere
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </>
-          );
-        })}
-      </>
-    );
-  };
-
+        </>)
+    }
   return (
-    <div>
-      <div className="container my-5 py-5">
-        <div className="row">
-          <div className="col-12">
-            <h1 className="display-6 fw-bolder text-center">Latest Products</h1>
-            <hr />
+      <div>
+          <div className="container">
+              <div className="row">
+                  {loading} ? <Loading/>:<ShowProduct/>
+              </div>
           </div>
-          <div className="row justify-content-center">
-            {loading ? <Loading /> : <ShowProducts />}
-          </div>
-        </div>
-      </div>
     </div>
-  );
+  )
 }
 
-export default Product;
+export default Product
