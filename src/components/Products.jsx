@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import  Skeleton  from "react-loading-skeleton";
 import { Link } from 'react-router-dom';
 function Products() {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
-  let componentMounted = true;
+  let  componentMounted = useRef(true);
 
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
       const res = await fetch(`https://fakestoreapi.com/products`);
-      if (componentMounted) {
+      if (componentMounted.current) {
         setData(await res.clone().json());
         setFilter(await res.json());
         setLoading(false);
       }
 
       return () => {
-        componentMounted = false;
+        componentMounted.current = false;
       };
     };
     getData();
