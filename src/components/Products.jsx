@@ -5,7 +5,8 @@ function Products() {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
-  let  componentMounted = useRef(true);
+
+  const  componentMounted = useRef(true);
 
   useEffect(() => {
     const getData = async () => {
@@ -16,7 +17,6 @@ function Products() {
         setFilter(await res.json());
         setLoading(false);
       }
-
       return () => {
         componentMounted.current = false;
       };
