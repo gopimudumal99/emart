@@ -1,7 +1,7 @@
 
 # Emart
 
-Build an e-commerce website with classic look and greate user  exprerience functionality 
+Built an e-commerce website with classic look and greate user  exprerience functionality 
 
 
 ## Demo
